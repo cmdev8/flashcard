@@ -7,6 +7,18 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func (h *handler) handleCardIndex(c echo.Context) error {
+	cards, err := card.ListCards(h.db, c.QueryParam("category"))
+
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"cards": cards,
+	})
+}
+
 func (h *handler) handleCardCreate(c echo.Context) error {
 	var params struct {
 		Category      string

@@ -31,5 +31,6 @@ func main() {
 	e.Use(middleware.Recover())
 
 	e.POST("/api/card", h.handleCardCreate)
+	e.GET("/api/card", h.handleCardIndex)
 	e.Logger.Fatal(e.Start(":1323"))
 }

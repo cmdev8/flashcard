@@ -19,3 +19,16 @@ type Card struct {
 func CreateCard(db *gorm.DB, newCard *Card) error {
 	return db.Create(newCard).Error
 }
+
+func ListCards(db *gorm.DB, category string) ([]Card, error) {
+	var r []Card
+	q := db.Order("id desc")
+
+	if category != "" {
+		q = q.Where("category = ?", category)
+	}
+
+	err := q.Find(&r).Error
+
+	return r, err
+}
