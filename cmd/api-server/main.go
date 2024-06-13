@@ -20,6 +20,7 @@ func main() {
 	}
 
 	db.AutoMigrate(&card.Card{})
+	db.AutoMigrate(&card.Result{})
 
 	h := handler{
 		db: db,
@@ -34,5 +35,7 @@ func main() {
 	e.GET("/api/card", h.handleCardIndex)
 	e.DELETE("/api/card/:id", h.handleCardDelete)
 	e.PUT("/api/card", h.handleCardUpdate)
+	e.POST("/api/result", h.handleResultCreate)
+	e.GET("/api/play", h.handlePlay)
 	e.Logger.Fatal(e.Start(":1323"))
 }
