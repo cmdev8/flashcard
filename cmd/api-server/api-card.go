@@ -56,3 +56,18 @@ func (h *handler) handleCardDelete(c echo.Context) error {
 	}
 	return card.DeleteCard(h.db, params.ID)
 }
+
+func (h *handler) handleCardUpdate(c echo.Context) error {
+	var params card.CardUpdateParams
+
+	if err := c.Bind(&params); err != nil {
+		return err
+	}
+
+	card, err := card.CardUpdate(h.db, params)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, card)
+}

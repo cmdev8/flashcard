@@ -41,3 +41,40 @@ func DeleteCard(db *gorm.DB, id uint) error {
 
 	return db.Delete(&card).Error
 }
+
+type CardUpdateParams struct {
+	ID            uint
+	Category      *string
+	QuestionText  *string
+	QuestionImage *string
+	AnswerImage   *string
+	AnswerText    *string
+}
+
+func CardUpdate(db *gorm.DB, params CardUpdateParams) (*Card, error) {
+	var card Card
+	if err := db.First(&card, params.ID).Error; err != nil {
+		return nil, err
+	}
+
+	if params.Category != nil {
+		card.Category = *params.Category
+	}
+
+	if params.QuestionImage != nil {
+		card.QuestionImage = *params.QuestionImage
+	}
+
+	if params.QuestionText != nil {
+		card.QuestionText = *params.QuestionText
+	}
+
+	if params.AnswerImage != nil {
+		card.AnswerImage = *params.AnswerImage
+	}
+	if params.AnswerText != nil {
+		card.AnswerText = *params.AnswerText
+	}
+
+	return &card, db.Save(&card).Error
+}
