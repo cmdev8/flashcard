@@ -32,3 +32,12 @@ func ListCards(db *gorm.DB, category string) ([]Card, error) {
 
 	return r, err
 }
+
+func DeleteCard(db *gorm.DB, id uint) error {
+	var card Card
+	if err := db.First(&card, id).Error; err != nil {
+		return err
+	}
+
+	return db.Delete(&card).Error
+}

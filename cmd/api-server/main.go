@@ -32,5 +32,6 @@ func main() {
 
 	e.POST("/api/card", h.handleCardCreate)
 	e.GET("/api/card", h.handleCardIndex)
+	e.DELETE("/api/card/:id", h.handleCardDelete)
 	e.Logger.Fatal(e.Start(":1323"))
 }

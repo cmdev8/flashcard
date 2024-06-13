@@ -45,3 +45,14 @@ func (h *handler) handleCardCreate(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, newCard)
 }
+
+func (h *handler) handleCardDelete(c echo.Context) error {
+	var params struct {
+		ID uint `param:"id"`
+	}
+
+	if err := c.Bind(&params); err != nil {
+		return err
+	}
+	return card.DeleteCard(h.db, params.ID)
+}
