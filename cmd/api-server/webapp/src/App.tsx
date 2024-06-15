@@ -28,6 +28,7 @@ function App() {
           <h1 className="text-base font-semibold leading-7 text-gray-900">
             Flash
           </h1>
+
           <div className="order-last flex w-full gap-x-8 text-sm font-semibold leading-6 sm:order-none sm:w-auto sm:border-l sm:border-gray-200 sm:pl-6 sm:leading-7">
             <NavLink to="/practice" className={activeFn}>
               <>Practice</>
@@ -37,13 +38,15 @@ function App() {
             </NavLink>
           </div>
         </div>
-        <div>
-          <CategorySelector onChange={(newCategory) => setCategory(newCategory)} />
+        <div className="w-2/3">
+          <CategorySelector
+            onChange={(newCategory) => setCategory(newCategory)}
+          />
         </div>
       </div>
 
       <div className="m-8">
-        <Outlet context={{category}} />
+        <Outlet context={{ category }} />
       </div>
     </>
   );
