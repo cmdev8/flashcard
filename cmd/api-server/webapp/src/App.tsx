@@ -1,15 +1,12 @@
 import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useOutletContext } from "react-router-dom";
+import CategorySelector from "./components/CategorySelector";
+
+type ContextType = { category: string };
 
 function App() {
-  return (
-    <>
-      <Heading />
-    </>
-  );
-}
+  const [category, setCategory] = useState("");
 
-function Heading() {
   const menuClasses = `text-gray-700`;
   const activeFn = ({
     isActive,
@@ -29,7 +26,7 @@ function Heading() {
       <div className="mt-4 mr-12 flex justify-between">
         <div className="flex flex-wrap items-center gap-6 px-4 sm:flex-nowrap sm:px-6 lg:px-8">
           <h1 className="text-base font-semibold leading-7 text-gray-900">
-            FlashCard
+            Flash
           </h1>
           <div className="order-last flex w-full gap-x-8 text-sm font-semibold leading-6 sm:order-none sm:w-auto sm:border-l sm:border-gray-200 sm:pl-6 sm:leading-7">
             <NavLink to="/practice" className={activeFn}>
@@ -41,15 +38,19 @@ function Heading() {
           </div>
         </div>
         <div>
-          -- category selector --
+          <CategorySelector onChange={(newCategory) => setCategory(newCategory)} />
         </div>
       </div>
 
       <div className="m-8">
-        <Outlet />
+        <Outlet context={{category}} />
       </div>
     </>
   );
+}
+
+export function useCategory() {
+  return useOutletContext<ContextType>();
 }
 
 export default App;
