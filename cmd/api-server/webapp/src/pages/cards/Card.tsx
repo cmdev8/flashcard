@@ -53,6 +53,7 @@ export default function Card({ card, callback, edit }: Props) {
   return (
     <div className="border rounded-lg shadow p-4 mb-4">
       <div>{card.QuestionText}</div>
+      <div className="mt-2">{card.QuestionImage !== "" && <img src={card.QuestionImage} />}</div>
 
       <div className="mt-4">
         <div
@@ -68,7 +69,10 @@ export default function Card({ card, callback, edit }: Props) {
             {!answerLocked && <>Hide Answer</>}
           </div>
         </div>
-        {!answerLocked && <div>{card.AnswerText}</div>}
+        {!answerLocked && <>
+          <div>{card.AnswerText}</div>
+          <div className="mt-2">{card.AnswerImage !== "" && <img src={card.AnswerImage} />}</div>
+        </> }
       </div>
       {!answerLocked && (
         <div className="mt-4 flex gap-1">
