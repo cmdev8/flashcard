@@ -24,6 +24,8 @@ export default function CategorySelector({ onChange }: props) {
 
   const save = () => {
     setCategories((prev) => [newCategory, ...prev]);
+    setCurrent(newCategory);
+    onChange(newCategory);
   };
 
   const close = () => {
@@ -76,7 +78,7 @@ export default function CategorySelector({ onChange }: props) {
             onChange(e.target.value);
           }}
         >
-          <option value="">Category</option>
+          <option value="">- Category -</option>
           {categories.map((item) => (
             <option key={item} value={item}>
               {item}
