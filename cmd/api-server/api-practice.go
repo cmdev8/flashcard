@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (h *handler) handlePlay(c echo.Context) error {
+func (h *handler) handlePractice(c echo.Context) error {
 	var params struct {
 		Category string
 	}
