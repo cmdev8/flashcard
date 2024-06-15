@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"embed"
 	"errors"
 	"flashcard/internal/card"
 	"fmt"
+	"io/fs"
 	"log/slog"
 	"net/http"
 	"os"
@@ -18,9 +20,10 @@ import (
 	"gorm.io/gorm"
 )
 
-type handler struct {
-	db *gorm.DB
-}
+const webAppDir = "webapp/dist"
+
+//go:embed webapp/dist
+var webappEmbedFs embed.FS
 
 type config struct {
 	DBPath     string `conf:"default:test.db"`
@@ -32,6 +35,10 @@ func main() {
 		fmt.Println("ERROR: ", err.Error())
 		os.Exit(1)
 	}
+}
+
+type handler struct {
+	db *gorm.DB
 }
 
 func run() error {
@@ -85,6 +92,19 @@ func run() error {
 		db: db,
 	}
 	registerRoutes(e, &h)
+
+	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+		Root:  "/",
+		HTML5: true,
+		Filesystem: func(path string, embededFiles embed.FS) http.FileSystem {
+			fsys, err := fs.Sub(embededFiles, path)
+			if err != nil {
+				panic(err)
+			}
+
+			return http.FS(fsys)
+		}(webAppDir, webappEmbedFs),
+	}))
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
