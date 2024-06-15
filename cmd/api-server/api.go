@@ -9,4 +9,5 @@ func registerRoutes(e *echo.Echo, h *handler) {
 	e.PUT("/api/card", h.handleCardUpdate)
 	e.POST("/api/result", h.handleResultCreate)
 	e.GET("/api/practice", h.handlePractice)
+	e.GET("/api/categories", h.handleCategoryIndex)
 }

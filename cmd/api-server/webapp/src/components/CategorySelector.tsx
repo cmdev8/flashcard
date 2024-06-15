@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Select } from "../ui/select";
@@ -9,29 +9,38 @@ type props = {
 };
 
 export default function CategorySelector({ onChange }: props) {
-  const [categories, setCategories] = useState(["egy", "ketto"]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [current, setCurrent] = useState("");
   const [editorOpen, setEditorOpen] = useState(false);
   const [newCategory, setNewCategory] = useState("");
 
+  const fetchCategories = async () => {
+    const resp = await fetch("/api/categories");
+    if (resp.ok) {
+      const body = await resp.json();
+      setCategories(body.Categories);
+    } 
+  };
+
   const save = () => {
-    setCategories((prev) => [newCategory, ...prev])
-  }
+    setCategories((prev) => [newCategory, ...prev]);
+  };
 
   const close = () => {
     setEditorOpen((prev) => {
-        setNewCategory("");
-        return !prev;
-      })
-  }
+      setNewCategory("");
+      return !prev;
+    });
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, [])
 
   return (
     <div className="flex justify-end">
       <div className="mr-2 flex gap-2">
-        <div
-          onClick={close}
-          className="w-6 flex items-center cursor-pointer"
-        >
+        <div onClick={close} className="w-6 flex items-center cursor-pointer">
           <PlusCircleIcon />
         </div>
         {editorOpen && (
@@ -45,10 +54,15 @@ export default function CategorySelector({ onChange }: props) {
               />
             </div>
             <div>
-              <Button color="green" onClick={() => {
-                save();
-                close();
-              }}>Save</Button>
+              <Button
+                color="green"
+                onClick={() => {
+                  save();
+                  close();
+                }}
+              >
+                Save
+              </Button>
             </div>
           </>
         )}
