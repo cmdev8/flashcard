@@ -8,12 +8,14 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "css:watch": "twcss -i src/input.css -o src/App.css --watch",
-    "css:build": "twcss -i src/input.css -o src/App.css --minify"
+    "css:watch": "twcss -i src/input.css -o src/index.css --watch",
+    "css:build": "twcss -i src/input.css -o src/index.css"
   },
   "dependencies": {
+    "@heroicons/react": "^2.1.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
