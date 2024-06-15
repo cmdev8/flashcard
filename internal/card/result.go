@@ -22,7 +22,7 @@ func CreateResult(db *gorm.DB, cardID uint, success bool) error {
 
 func ListResultAfter(db *gorm.DB, after time.Time) ([]Result, error) {
 	var results []Result
-	err := db.Where("created_at >= ", after).Find(&results).Error
+	err := db.Where("created_at >= ?", after).Find(&results).Error
 
 	return results, err
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useCategory } from "../../App";
-import { Button } from "@headlessui/react";
 import Card from "../cards/Card";
+import { Button } from "../../ui/button";
 
 export default function PracticeIndex() {
   const { category } = useCategory();
@@ -40,7 +40,11 @@ export default function PracticeIndex() {
       {msg !== "" && (
         <div>
           <div className="text-red-500 bg-red-100 rounded-lg p-4">{msg}</div>
-          <Button color={"green"}>Practice!</Button>
+          <div className="mt-4">
+            <Button className="cursor-pointer" color={"green"} onClick={() => fetchCard()}>
+              Get Next Card!
+            </Button>
+          </div>
         </div>
       )}
       {card !== null && (

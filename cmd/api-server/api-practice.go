@@ -17,7 +17,7 @@ func (h *handler) handlePractice(c echo.Context) error {
 		return err
 	}
 
-	nextCard, err := card.GetNextCard(h.db, params.Category, time.Now())
+	nextCard, err := card.GetNextCard(h.db, params.Category, time.Now().Add(-2*time.Hour))
 	if err != nil {
 		return err
 	}
