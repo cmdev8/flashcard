@@ -4,10 +4,11 @@ import { Button } from "../../ui/button";
 
 type Props = {
   card: Card;
-  callback: () => void;
+  callback?: () => void;
+  edit: boolean;
 };
 
-export default function Card({ card, callback }: Props) {
+export default function Card({ card, callback, edit }: Props) {
   const [answerLocked, setAnswerLocked] = useState(true);
 
   const sendResult = async (success: boolean) => {
@@ -30,6 +31,25 @@ export default function Card({ card, callback }: Props) {
     }
   };
 
+  const deleteCard = async () => {
+    if (!confirm("Sure?")) {
+      return;
+    }
+
+    const q = await fetch(`/api/card/${card.ID}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if ((await q).ok) {
+      if (callback !== undefined) {
+        callback();
+      }
+    }
+  };
+
   return (
     <div className="border rounded-lg shadow p-4 mb-4">
       <div>{card.QuestionText}</div>
@@ -44,7 +64,6 @@ export default function Card({ card, callback }: Props) {
             {!answerLocked && <LockOpenIcon className="w-4" />}
           </div>
           <div>
-            {" "}
             {answerLocked && <>Show Answer</>}
             {!answerLocked && <>Hide Answer</>}
           </div>
@@ -54,15 +73,34 @@ export default function Card({ card, callback }: Props) {
       {!answerLocked && (
         <div className="mt-4 flex gap-1">
           <div>
-            <Button color={"red"} onClick={() => sendResult(false)} className="cursor-pointer">
+            <Button
+              color={"red"}
+              onClick={() => sendResult(false)}
+              className="cursor-pointer"
+            >
               Fail
             </Button>
           </div>
           <div>
-            <Button color={"green"} onClick={() => sendResult(true)} className="cursor-pointer">
+            <Button
+              color={"green"}
+              onClick={() => sendResult(true)}
+              className="cursor-pointer"
+            >
               Success
             </Button>
           </div>
+        </div>
+      )}
+      {edit && (
+        <div className="mt-4 p-4 border border-red-100 rounded-lg">
+          <Button
+            color={"red"}
+            onClick={() => deleteCard()}
+            className="cursor-pointer"
+          >
+            Delete
+          </Button>
         </div>
       )}
     </div>

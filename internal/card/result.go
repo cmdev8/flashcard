@@ -19,3 +19,10 @@ func CreateResult(db *gorm.DB, cardID uint, success bool) error {
 		Success: success,
 	}).Error
 }
+
+func ListResultAfter(db *gorm.DB, after time.Time) ([]Result, error) {
+	var results []Result
+	err := db.Where("created_at >= ", after).Find(&results).Error
+
+	return results, err
+}

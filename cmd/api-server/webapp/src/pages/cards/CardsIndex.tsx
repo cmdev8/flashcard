@@ -32,7 +32,7 @@ export default function CardsIndex() {
       <div className="mt-4">
         {cards.map((card) => (
           <div key={card.ID}>
-            <Card card={card} />
+            <Card card={card} edit={true} callback={fetchCards} />
           </div>
         ))}
       </div>
