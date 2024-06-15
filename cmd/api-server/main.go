@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flashcard/internal/card"
 	"fmt"
 	"log/slog"
@@ -10,6 +11,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/ardanlabs/conf/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"gorm.io/driver/sqlite"
@@ -21,27 +23,36 @@ type handler struct {
 }
 
 type config struct {
-	DBPath     string
-	ServerPort int
+	DBPath     string `conf:"default:test.db"`
+	ServerPort int    `conf:"default:8013"`
 }
 
 func main() {
-	cfg := config{
-		DBPath:     "test.db",
-		ServerPort: 8013,
+	if err := run(); err != nil {
+		fmt.Println("ERROR: ", err.Error())
+		os.Exit(1)
+	}
+}
+
+func run() error {
+	var cfg config
+
+	if help, err := conf.Parse("", &cfg); err != nil {
+		fmt.Println(help)
+		if errors.Is(err, conf.ErrHelpWanted) {
+			return nil
+		}
+
+		return err
 	}
 
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(cfg.DBPath), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
 
 	db.AutoMigrate(&card.Card{})
 	db.AutoMigrate(&card.Result{})
-
-	h := handler{
-		db: db,
-	}
 
 	e := echo.New()
 
@@ -70,12 +81,10 @@ func main() {
 
 	e.Use(middleware.Recover())
 
-	e.POST("/api/card", h.handleCardCreate)
-	e.GET("/api/card", h.handleCardIndex)
-	e.DELETE("/api/card/:id", h.handleCardDelete)
-	e.PUT("/api/card", h.handleCardUpdate)
-	e.POST("/api/result", h.handleResultCreate)
-	e.GET("/api/practice", h.handlePractice)
+	h := handler{
+		db: db,
+	}
+	registerRoutes(e, &h)
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
@@ -92,4 +101,6 @@ func main() {
 	if err := e.Shutdown(ctx); err != nil {
 		e.Logger.Fatal(err)
 	}
+
+	return nil
 }

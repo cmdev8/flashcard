@@ -3,6 +3,7 @@ module flashcard
 go 1.22.4
 
 require (
+	github.com/ardanlabs/conf/v3 v3.1.7
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/samber/lo v1.39.0
 	gorm.io/driver/sqlite v1.5.6
